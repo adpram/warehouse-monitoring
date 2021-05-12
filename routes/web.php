@@ -12,9 +12,14 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('main');
 });
 
 Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
+Route::group(['middleware' => ['admin']],function(){
+    Route::get('/admin', 'AdminController@index')->name('admin');
+    Route::resource('/user', 'UserController');
+    Route::put('/user/changepassword/{id}', 'UserController@changePassword');
+    Route::resource('/area', 'AreaController');
+    Route::resource('/rack', 'RackController');
+});
