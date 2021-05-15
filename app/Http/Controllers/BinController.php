@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Area;
+use App\Bin;
 use App\BinLocation;
-use App\Rack;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Exception;
 
-class RackController extends Controller
+class BinController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -28,20 +27,9 @@ class RackController extends Controller
      */
     public function index()
     {
-        $sql = "
-        SELECT DISTINCT
-            racks.*, areas.*,
-            ( SELECT count( bin_locations.id_bin_location ) FROM bin_locations WHERE bin_locations.rack_id = racks.id_rack ) AS jumlahbinlocation 
-        FROM
-            racks
-            LEFT JOIN bin_locations ON bin_locations.rack_id = racks.id_rack 
-            LEFT JOIN areas ON areas.id_area = racks.area_id 
-        ORDER BY
-            racks.area_id ASC
-        ";
-        $racks = DB::select($sql);
-        $areas = Area::all();
-        return view('admin.rack', compact('racks', 'areas'));
+        $bins = Bin::orderBy('bin_location_id', 'ASC')->get();
+        $binlocations = BinLocation::all();
+        return view('admin.bin', compact('bins', 'binlocations'));
     }
 
     /**
@@ -64,10 +52,10 @@ class RackController extends Controller
     {
         DB::beginTransaction();
         try {
-            $rack = new Rack();
-            $rack->area_id = $request->area_id;
-            $rack->rack_name = $request->rack_name;
-            $rack->save();
+            $bin = new Bin();
+            $bin->bin_location_id = $request->bin_location_id;
+            $bin->bin_name = $request->bin_name;
+            $bin->save();
             DB::commit();
             return response()->json([
                 'message' => 'success',
@@ -99,8 +87,8 @@ class RackController extends Controller
      */
     public function edit($id)
     {
-        $rack = Rack::find($id);
-        return json_encode($rack);
+        $bin = Bin::find($id);
+        return json_encode($bin);
     }
 
     /**
@@ -114,10 +102,10 @@ class RackController extends Controller
     {
         DB::beginTransaction();
         try {
-            $rack = Rack::findOrFail($id);
-            $rack->area_id = $request->area_id;
-            $rack->rack_name = $request->rack_name;
-            $rack->update();
+            $bin = Bin::findOrFail($id);
+            $bin->bin_location_id = $request->bin_location_id;
+            $bin->bin_name = $request->bin_name;
+            $bin->update();
             DB::commit();
             return response()->json([
                'message' => 'success',
@@ -138,18 +126,11 @@ class RackController extends Controller
      */
     public function destroy($id)
     {
-        // cek isi rak
-        $binlocation = BinLocation::where('rack_id', $id)->get();
-        if ( count($binlocation) > 0 ) {
-            return response()->json([
-                'message' => 'binlocation',
-            ], 500);
-        } else {
-            $rack = Rack::find($id);
-            $rack->delete();
-            return response()->json([
-                'message' => 'success',
-            ], 200);
-        }
+        // tambah kondisi jika bin ada item nya
+        $bin = Bin::find($id);
+        $bin->delete();
+        return response()->json([
+            'message' => 'success',
+        ], 200);
     }
 }

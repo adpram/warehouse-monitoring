@@ -22,4 +22,6 @@ Route::group(['middleware' => ['admin']],function(){
     Route::put('/user/changepassword/{id}', 'UserController@changePassword');
     Route::resource('/area', 'AreaController');
     Route::resource('/rack', 'RackController');
+    Route::resource('/bin-location', 'BinLocationController');
+    Route::resource('/bin', 'BinController');
 });

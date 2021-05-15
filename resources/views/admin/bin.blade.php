@@ -4,16 +4,16 @@
     <div class="header-body">
         <div class="row align-items-center py-4">
             <div class="col-lg-6 col-7">
-                <h6 class="h2 text-white d-inline-block mb-0">Pengaturan master rak</h6>
+                <h6 class="h2 text-white d-inline-block mb-0">Pengaturan master <i>bin</i></h6>
                 <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
                     <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
                         <li class="breadcrumb-item"><a href="{{ route('admin') }}"><i class="fas fa-home"></i></a></li>
                     </ol>
                 </nav>
             </div>
-            <div class="col-lg-6 col-5 text-right">
+            <div class="col-lg-6 text-right">
             <a href="" type="button" class="btn btn-success"
-				data-toggle="modal" data-target="#addRackModal"><i class="fas fa-user-plus"></i> Tambah Rak</a>
+				data-toggle="modal" data-target="#addBinModal"><i class="fas fa-user-plus"></i> Tambah<i>Bin</i></a>
             </div>
         </div>
         <!-- Card stats -->
@@ -22,9 +22,9 @@
                 <div class="card">
                     <!-- Card header -->
                     <div class="card-header">
-                        <h3 class="mb-0">Rak</h3>
+                        <h3 class="mb-0">Bin</h3>
                         <p class="text-sm mb-0">
-                            Daftar rak pada sistem monitoring gudang.
+                            Daftar <i>bin</i> pada sistem monitoring gudang.
                         </p>
                     </div>
                     <div class="table-responsive py-4">
@@ -33,22 +33,24 @@
                                 <tr>
                                     <th style="width: 7%">#</th>
                                     <th>Area</th>
-                                    <th>Nama Rak</th>
-                                    <th>Jumlah <i>Bin Location</i></th>
+                                    <th>Rak</th>
+                                    <th><i>Bin Location</i></th>
+                                    <th>Nama <i>Bin</i></th>
                                     <th style="width: 20%">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ( $racks as $key => $value )
+                                @foreach ( $bins as $key => $value )
                                 <tr>
                                     <th>{{ $key + 1 }}</th>
-                                    <th>{{ $value->area_name }}</th>
-                                    <th>{{ $value->rack_name }}</th>
-                                    <th>{{ $value->jumlahbinlocation }}</th>
+                                    <th>{{ $value->binlocation->rack->area->area_name }}</th>
+                                    <th>{{ $value->binlocation->rack->rack_name }}</th>
+                                    <th>{{ $value->binlocation->bin_location_name }}</th>
+                                    <th>{{ $value->bin_name }}</th>
                                     <th>
-                                        <a href="javascript:void(0)" onclick="editRack(<?= $value->id_rack ?>)"
+                                        <a href="javascript:void(0)" onclick="editBin(<?= $value->id_bin ?>)"
                                             class="btn btn-outline-success btn-sm"><i class="fas fa-edit"></i> Edit</a>
-                                        <a href="javascript:void(0)" onclick="deleteRack(<?= $value->id_rack ?>)"
+                                        <a href="javascript:void(0)" onclick="deleteBin(<?= $value->id_bin ?>)"
                                             class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> Delete</a>
                                     </th>
                                 </tr>
@@ -63,34 +65,34 @@
 </div>
 <!-- Modal -->
 <!-- ADD -->
-<div class="modal fade" id="addRackModal" tabindex="-1" role="dialog" aria-labelledby="addRackModalLabel"
+<div class="modal fade" id="addBinModal" tabindex="-1" role="dialog" aria-labelledby="addBinModalLabel"
 	aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="addRackModalLabel">Tambah Rak</h5>
+				<h5 class="modal-title" id="addBinModalLabel">Tambah <i>Bin</i></h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
-			<form class="form-horizontal" id="storeRack">
+			<form class="form-horizontal" id="storeBin">
 				<div class="modal-body">
 					<!-- Form groups used in grid -->
 					<div class="row">
                         <div class="col-md-12">
 							<div class="form-group">
-                                <label class="form-control-label" for="">Area</label>
-                                <select class="form-control" id="storeChooseArea" name="area_id">
-                                    @foreach ($areas as $value)
-                                        <option value="{{ $value->id_area }}">{{ $value->area_name }}</option>
+                                <label class="form-control-label" for=""><i>Bin Location</i></label>
+                                <select class="form-control" id="storeChooseBinLocation" name="bin_location_id">
+                                    @foreach ($binlocations as $value)
+                                        <option value="{{ $value->id_bin_location }}">{{ $value->bin_location_name }} ({{ $value->rack->rack_name }} - {{ $value->rack->area->area_name}})</option>
                                     @endforeach
                                 </select>
 							</div>
 						</div>
 						<div class="col-md-12">
 							<div class="form-group">
-								<label class="form-control-label" for="">Nama Rak</label>
-                                <input id="rack_name" type="text" class="form-control" name="rack_name" required autocomplete="name" autofocus>
+								<label class="form-control-label" for="">Nama <i>Bin</i></label>
+                                <input id="bin_name" type="text" class="form-control" name="bin_name" required autofocus>
 							</div>
 						</div>
 					</div>
@@ -104,35 +106,35 @@
 	</div>
 </div>
 <!-- EDIT -->
-<div class="modal fade" id="editRackModal" tabindex="-1" role="dialog" aria-labelledby="editRackModalLabel"
+<div class="modal fade" id="editBinModal" tabindex="-1" role="dialog" aria-labelledby="editBinModalLabel"
 	aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="editRackModalLabel">Ubah Rak</h5>
+				<h5 class="modal-title" id="editBinModalLabel">Ubah <i>Bin</i></h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
-			<form class="form-horizontal" id="updateRack">
+			<form class="form-horizontal" id="updateBin">
 				<div class="modal-body">
 					<!-- Form groups used in grid -->
 					<div class="row">
                         <div class="col-md-12">
 							<div class="form-group">
-                                <label class="form-control-label" for="">Area</label>
-                                <select class="form-control" id="updateChooseArea" name="area_id">
-                                    @foreach ($areas as $value)
-                                        <option value="{{ $value->id_area }}">{{ $value->area_name }}</option>
+                                <label class="form-control-label" for=""><i>Bin Location</i></label>
+                                <select class="form-control" id="updateChooseBinLocation" name="bin_location_id">
+                                    @foreach ($binlocations as $value)
+                                        <option value="{{ $value->id_bin_location }}">{{ $value->bin_location_name }} ({{ $value->rack->rack_name }} - {{ $value->rack->area->area_name}})</option>
                                     @endforeach
                                 </select>
 							</div>
 						</div>
 						<div class="col-md-12">
 							<div class="form-group">
-								<label class="form-control-label" for="">Nama Rak</label>
-								<input type="text" class="form-control" id="namarak" name="rack_name">
-								<input type="hidden" id="id_rack" name="id_rack">
+								<label class="form-control-label" for="">Nama <i>Bin</i></label>
+								<input type="text" class="form-control" id="namabin" name="bin_name">
+								<input type="hidden" id="id_bin" name="id_bin">
 							</div>
 						</div>
 					</div>
@@ -149,19 +151,19 @@
 
 @section('script')
 <script type="text/javascript">
-    $('#storeChooseArea').select2({
-        dropdownParent: $('#addRackModal'),
+    $('#storeChooseBinLocation').select2({
+        dropdownParent: $('#addBinModal'),
     });
 
-    $('#updateChooseArea').select2({
-        dropdownParent: $('#editRackModal'),
+    $('#updateChooseBinLocation').select2({
+        dropdownParent: $('#editBinModal'),
     });
     
-    // tambah rak
-    $('#storeRack').on('submit', function (e) {
+    // tambah bin 
+    $('#storeBin').on('submit', function (e) {
         if (!e.isDefaultPrevented()) {
             $.ajax({
-                url: "rack/",
+                url: "bin/",
                 type: "POST",
                 beforeSend: function () {
                     swal({
@@ -175,23 +177,23 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                data: $('#storeRack').serialize(),
+                data: $('#storeBin').serialize(),
                 dataType: "json",
                 success: function (data) {
                     swal({
                         title: 'Berhasil!',
-                        text: 'Berhasil menambahkan rak!',
+                        text: 'Berhasil menambahkan bin!',
                         icon: 'success'
                     }).then(function () {
-                        $('#addRackModal').modal('hide');
-                        window.location.href = "{{ route('rack.index') }}";
+                        $('#addBinModal').modal('hide');
+                        window.location.href = "{{ route('bin.index') }}";
                     });
                 },
                 error: function (e) {
                     console.log(e.responseJSON.message)
                     swal({
                         title: 'Gagal!',
-                        text: 'Gagal menambahkan rak!, silahkan menghubungi IT',
+                        text: 'Gagal menambahkan bin!, silahkan menghubungi IT',
                         icon: 'error'
                     })
                 }
@@ -201,29 +203,29 @@
         }
     });
 
-    // edit rak
-    function editRack(id) {
+    // edit bin
+    function editBin(id) {
         $.ajax({
-            url: "rack/" +id+ "/edit",
+            url: "bin/" +id+ "/edit",
             type: "GET",
             dataType: "JSON",
             success: function (data) {
                 console.log(data);
-                $('#editRackModal').modal('show');
-                $("#id_rack").val(data.id_rack);
-                $("#updateChooseArea").val(data.area_id).change();
-                $("#namarak").val(data.rack_name);
+                $('#editBinModal').modal('show');
+                $("#id_bin").val(data.id_bin);
+                $("#updateChooseBinLocation").val(data.bin_location_id).change();
+                $("#namabin").val(data.bin_name);
             },
             error: function () {
                 alert("Can not show the data!");
             }
         })
     }
-    $('#updateRack').on('submit', function (e) {
+    $('#updateBin').on('submit', function (e) {
         if (!e.isDefaultPrevented()) {
-            var id = $('#id_rack').val()
+            var id = $('#id_bin').val()
             $.ajax({
-                url: "rack/" + id,
+                url: "bin/" + id,
                 type: "PUT",
                 beforeSend: function () {
                     swal({
@@ -237,24 +239,24 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                data: $('#updateRack').serialize(),
+                data: $('#updateBin').serialize(),
                 dataType: "json",
                 success: function (data) {
                     console.log(data.status)
                     swal({
                         title: 'Berhasil!',
-                        text: 'Rak berhasil diperbarui!',
+                        text: 'Bin berhasil diperbarui!',
                         icon: 'success'
                     }).then(function () {
-                        $('#editRackModal').modal('hide');
-                        window.location.href = "{{ route('rack.index') }}";
+                        $('#editBinModal').modal('hide');
+                        window.location.href = "{{ route('bin.index') }}";
                     });
                 },
                 error: function (e) {
                     console.log(e)
                     swal({
                         title: 'Gagal!',
-                        text: 'Rak gagal diperbarui!, silahkan menghubungi IT',
+                        text: 'Bin gagal diperbarui!, silahkan menghubungi IT',
                         icon: 'error'
                     })
                 }
@@ -264,11 +266,11 @@
         }
     });
 
-    // hapus rak
-    function deleteRack(id) {
+    // hapus bin
+    function deleteBin(id) {
 		swal({
 			title: "Apakah anda yakin ?",
-			text: "Anda akan menghapus rak",
+			text: "Anda akan menghapus bin",
 			icon: "warning",
 			buttons: {
 				canceled: {
@@ -286,11 +288,11 @@
 		}).then((willDelete) => {
 			switch (willDelete) {
 				default:
-					swal("Rak aman");
+					swal("Bin aman");
 					break;
 				case 'delete':
 					$.ajax({
-						url: "rack/" + id,
+						url: "bin/" + id,
                         type: "POST",
                         data : {'_method' : 'DELETE', '_token' : $('meta[name=csrf-token]').attr('content')},
 						dataType: "json",
@@ -298,31 +300,23 @@
 							console.log(data)
 							if (data == "error") {
 								swal({
-									title: 'Gagal menghapus rak!',
+									title: 'Gagal menghapus bin!',
 									text: 'Silahkan menghubungi IT',
 									icon: 'error'
 								})
 							} else {
-								swal("Rak berhasil dihapus", {
+								swal("Bin berhasil dihapus", {
 									icon: "success",
 								}).then(function () {
-									window.location.href = "{{ route('rack.index') }}";
+									window.location.href = "{{ route('bin.index') }}";
 								});
 							}
 						},
-						error: function (e) {
-                            if ( e.responseJSON.message == "binlocation") {
-                                swal({
-                                    title: 'Gagal!',
-                                    text: 'Gagal menghapus rak!, karena masih ada bin-location',
-                                    icon: 'error'
-                                })    
-                            } else {
-                                swal({
-                                    text: 'Rak gagal dihapus!',
-                                    icon: 'error'
-                                })
-                            }
+						error: function () {
+							swal({
+								text: 'Bin gagal dihapus!',
+								icon: 'error'
+							})
 						}
 					});
 				break;

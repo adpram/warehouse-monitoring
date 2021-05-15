@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Area;
+use App\Bin;
 use App\BinLocation;
 use App\Rack;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Exception;
 
-class RackController extends Controller
+class BinLocationController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -30,18 +30,21 @@ class RackController extends Controller
     {
         $sql = "
         SELECT DISTINCT
-            racks.*, areas.*,
-            ( SELECT count( bin_locations.id_bin_location ) FROM bin_locations WHERE bin_locations.rack_id = racks.id_rack ) AS jumlahbinlocation 
+            racks.*,
+            areas.*,
+            bin_locations.*,
+            ( SELECT count( bins.id_bin ) FROM bins WHERE bins.bin_location_id = bin_locations.id_bin_location ) AS jumlahbin 
         FROM
-            racks
-            LEFT JOIN bin_locations ON bin_locations.rack_id = racks.id_rack 
-            LEFT JOIN areas ON areas.id_area = racks.area_id 
+            bin_locations
+            LEFT JOIN racks ON racks.id_rack = bin_locations.rack_id
+            LEFT JOIN areas ON areas.id_area = racks.area_id
+            LEFT JOIN bins ON bins.bin_location_id = bin_locations.id_bin_location 
         ORDER BY
-            racks.area_id ASC
+            areas.id_area ASC
         ";
-        $racks = DB::select($sql);
-        $areas = Area::all();
-        return view('admin.rack', compact('racks', 'areas'));
+        $binlocations = DB::select($sql);
+        $racks = Rack::all();
+        return view('admin.bin-location', compact('binlocations', 'racks'));
     }
 
     /**
@@ -64,10 +67,18 @@ class RackController extends Controller
     {
         DB::beginTransaction();
         try {
-            $rack = new Rack();
-            $rack->area_id = $request->area_id;
-            $rack->rack_name = $request->rack_name;
-            $rack->save();
+            $binlocation = new BinLocation();
+            $binlocation->rack_id = $request->rack_id;
+            $binlocation->bin_location_name = $request->bin_location_name;
+            $binlocation->save();
+            if ( !empty($request->bin_qty) ) {
+                for ( $i=1; $i <= $request->bin_qty; $i++ ) {
+                    $bin = new Bin();
+                    $bin->bin_location_id = $binlocation->id_bin_location;
+                    $bin->bin_name = $i;
+                    $bin->save();
+                }
+            }
             DB::commit();
             return response()->json([
                 'message' => 'success',
@@ -99,8 +110,8 @@ class RackController extends Controller
      */
     public function edit($id)
     {
-        $rack = Rack::find($id);
-        return json_encode($rack);
+        $binlocation = BinLocation::find($id);
+        return json_encode($binlocation);
     }
 
     /**
@@ -114,10 +125,10 @@ class RackController extends Controller
     {
         DB::beginTransaction();
         try {
-            $rack = Rack::findOrFail($id);
-            $rack->area_id = $request->area_id;
-            $rack->rack_name = $request->rack_name;
-            $rack->update();
+            $binlocation = BinLocation::findOrFail($id);
+            $binlocation->rack_id = $request->rack_id;
+            $binlocation->bin_location_name = $request->bin_location_name;
+            $binlocation->update();
             DB::commit();
             return response()->json([
                'message' => 'success',
@@ -138,15 +149,15 @@ class RackController extends Controller
      */
     public function destroy($id)
     {
-        // cek isi rak
-        $binlocation = BinLocation::where('rack_id', $id)->get();
-        if ( count($binlocation) > 0 ) {
+        // cek isi bin location
+        $bin = Bin::where('bin_location_id', $id)->get();
+        if ( count($bin) > 0 ) {
             return response()->json([
-                'message' => 'binlocation',
+                'message' => 'bin',
             ], 500);
         } else {
-            $rack = Rack::find($id);
-            $rack->delete();
+            $binlocation = BinLocation::find($id);
+            $binlocation->delete();
             return response()->json([
                 'message' => 'success',
             ], 200);

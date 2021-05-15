@@ -61,14 +61,26 @@
                     <ul class="navbar-nav mb-md-3">
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('area.index') }}">
-                                <i class="ni ni-building"></i>
+                                <i class="fas fa-warehouse"></i>
                                 <span class="nav-link-text">Area</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('rack.index') }}">
-                                <i class="fa fa-bars"></i>
+                                <i class="fas fa-columns"></i>
                                 <span class="nav-link-text">Rak</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('bin-location.index') }}">
+                                <i class="fas fa-archive"></i>
+                                <span class="nav-link-text"><i>Bin Location</i></span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('bin.index') }}">
+                                <i class="fas fa-cubes"></i>
+                                <span class="nav-link-text"><i>Bin</i></span>
                             </a>
                         </li>
                     </ul>
