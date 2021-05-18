@@ -13,6 +13,6 @@ class Area extends Model
 
     public function rack()
     {
-        return $this->belongsTo('App\Rack', 'id_area', 'area_id');
+        return $this->hasMany('App\Rack', 'area_id', 'id_area');
     }
 }

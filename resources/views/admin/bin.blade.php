@@ -7,7 +7,7 @@
                 <h6 class="h2 text-white d-inline-block mb-0">Pengaturan master <i>bin</i></h6>
                 <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
                     <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
-                        <li class="breadcrumb-item"><a href="{{ route('admin') }}"><i class="fas fa-home"></i></a></li>
+                        <li class="breadcrumb-item"><a href="{{ url('/') }}"><i class="fas fa-home"></i></a></li>
                     </ol>
                 </nav>
             </div>
@@ -312,11 +312,19 @@
 								});
 							}
 						},
-						error: function () {
-							swal({
-								text: 'Bin gagal dihapus!',
-								icon: 'error'
-							})
+						error: function (e) {
+                            if ( e.responseJSON.message == "item") {
+                                swal({
+                                    title: 'Gagal!',
+                                    text: 'Gagal menghapus bin!, karena masih ada item',
+                                    icon: 'error'
+                                })    
+                            } else {
+                                swal({
+                                    text: 'Bin gagal dihapus!',
+                                    icon: 'error'
+                                })
+                            }
 						}
 					});
 				break;

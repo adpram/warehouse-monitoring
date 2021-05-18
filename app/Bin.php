@@ -16,4 +16,9 @@ class Bin extends Model
     {
         return $this->belongsTo('App\BinLocation', 'bin_location_id', 'id_bin_location');
     }
+
+    public function item()
+    {
+        return $this->belongsTo('App\Item', 'id_bin', 'bin_id');
+    }
 }

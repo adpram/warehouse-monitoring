@@ -19,6 +19,6 @@ class BinLocation extends Model
 
     public function bin()
     {
-        return $this->belongsTo('App\Bin', 'id_bin_location', 'bin_location_id');
+        return $this->hasMany('App\Bin', 'bin_location_id', 'id_bin_location');
     }
 }

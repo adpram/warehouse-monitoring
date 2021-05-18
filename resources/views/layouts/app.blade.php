@@ -15,9 +15,13 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('vendor/@fortawesome/fontawesome-free/css/all.min.css') }}" type="text/css">
 
     <!-- Styles -->
+    <link rel="stylesheet" href="{{ asset('vendor/select2/dist/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/argon.min-v=1.0.0.css') }}" type="text/css">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    @yield('style')
 </head>
 <body>
     <div id="app">
@@ -81,5 +85,11 @@
             @yield('content')
         </main>
     </div>
+    <script src="{{ asset('vendor/jquery/dist/jquery.min.js') }}"></script>
+    <script src="{{ asset('vendor/js-cookie/js.cookie.js') }}"></script>
+    <script src="{{ asset('vendor/select2/dist/js/select2.min.js') }}" defer></script>
+    <script src="{{ asset('js/argon.min-v=1.0.0.js') }}"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    @yield('script')
 </body>
 </html>

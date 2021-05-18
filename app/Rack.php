@@ -19,6 +19,6 @@ class Rack extends Model
 
     public function binlocation()
     {
-        return $this->belongsTo('App\BinLocation', 'id_rack', 'rack_id');
+        return $this->hasMany('App\BinLocation', 'rack_id', 'id_rack');
     }
 }

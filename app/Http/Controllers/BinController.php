@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Bin;
 use App\BinLocation;
+use App\Item;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Exception;
@@ -126,11 +127,18 @@ class BinController extends Controller
      */
     public function destroy($id)
     {
-        // tambah kondisi jika bin ada item nya
-        $bin = Bin::find($id);
-        $bin->delete();
-        return response()->json([
-            'message' => 'success',
-        ], 200);
+        // cek isi bin 
+        $item = Item::where('bin_id', $id)->get();
+        if ( count($item) > 0 ) {
+            return response()->json([
+                'message' => 'item',
+            ], 500);
+        } else {
+            $bin = Bin::find($id);
+            $bin->delete();
+            return response()->json([
+                'message' => 'success',
+            ], 200);
+        }
     }
 }

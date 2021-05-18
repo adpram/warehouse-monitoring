@@ -11,9 +11,12 @@
 |
 */
 
-Route::get('/', function () {
-    return view('main');
-});
+Route::resource('/', 'MainController');
+Route::get('/main/rack/{area}', 'MainController@getRack');
+Route::get('/main/bin-location/{rack}', 'MainController@getBinLocation');
+Route::get('/main/bin/{binlocation}', 'MainController@getBin');
+Route::post('/item', 'MainController@storeItem');
+Route::get('/info/item/{id}', 'MainController@infoItem');
 
 Auth::routes();
 Route::group(['middleware' => ['admin']],function(){
