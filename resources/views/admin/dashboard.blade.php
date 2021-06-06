@@ -17,7 +17,7 @@
         </div>
         <!-- Card stats -->
         <div class="row">
-            <div class="col-xl-3 col-md-6">
+            <div class="col-xl-4 col-md-6">
                 <div class="card card-stats">
                     <!-- Card body -->
                     <div class="card-body">
@@ -35,7 +35,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xl-3 col-md-6">
+            <div class="col-xl-4 col-md-6">
                 <div class="card card-stats">
                     <!-- Card body -->
                     <div class="card-body">
@@ -53,13 +53,13 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xl-3 col-md-6">
+            <div class="col-xl-4 col-md-6">
                 <div class="card card-stats">
                     <!-- Card body -->
                     <div class="card-body">
                         <div class="row">
                             <div class="col">
-                                <h6 class="card-title text-uppercase text-muted mb-0">Total <i>Bin Location</i></h6>
+                                <h5 class="card-title text-uppercase text-muted mb-0">Total <i>Bin Location</i></h5>
                                 <span class="h2 font-weight-bold mb-0">{{ $totalBinLocation }}</span>
                             </div>
                             <div class="col-auto">
@@ -71,6 +71,9 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="row">
+            <div class="col-xl-3 col-md-6"></div>
             <div class="col-xl-3 col-md-6">
                 <div class="card card-stats">
                     <!-- Card body -->
@@ -89,6 +92,25 @@
                     </div>
                 </div>
             </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="card card-stats">
+                    <!-- Card body -->
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <h5 class="card-title text-uppercase text-muted mb-0">Total Item</h5>
+                                <span class="h2 font-weight-bold mb-0">{{ $totalItem }}</span>
+                            </div>
+                            <div class="col-auto">
+                                <div class="icon icon-shape bg-gradient-purple text-white rounded-circle shadow">
+                                    <i class="fas fa-boxes"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6"></div>
         </div>
     </div>
 </div>

@@ -86,6 +86,16 @@
                     </ul>
                     <!-- Divider -->
                     <hr class="my-3">
+                    <ul class="navbar-nav mb-md-3">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('item.list-index') }}">
+                                <i class="fas fa-boxes"></i>
+                                <span class="nav-link-text">Daftar Item</span>
+                            </a>
+                        </li>
+                    </ul>
+
+                    <hr class="my-3">
                     <!-- Heading -->
                     <h6 class="navbar-heading p-0 text-muted">Pengaturan</h6>
                     <!-- Navigation -->

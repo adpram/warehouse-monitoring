@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Area;
 use App\Bin;
 use App\BinLocation;
+use App\Item;
 use App\Rack;
 use Illuminate\Http\Request;
 
@@ -31,7 +32,8 @@ class AdminController extends Controller
         $totalRack = Rack::count();
         $totalBinLocation = BinLocation::count();
         $totalBin = Bin::count();
-        return view('admin.dashboard', compact('totalArea', 'totalRack', 'totalBinLocation', 'totalBin'));
+        $totalItem = Item::count();
+        return view('admin.dashboard', compact('totalArea', 'totalRack', 'totalBinLocation', 'totalBin', 'totalItem'));
     }
 
     /**
