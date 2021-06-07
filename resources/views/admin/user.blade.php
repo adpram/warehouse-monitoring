@@ -141,8 +141,8 @@
 						<div class="col-md-12">
 							<div class="form-group">
 								<label class="form-control-label" for="">Nama</label>
-								<input type="text" class="form-control" id="name" name="name">
-								<input type="hidden" id="id" name="id">
+								<input type="text" class="form-control" id="editName" name="name">
+								<input type="hidden" id="editID" name="id">
 							</div>
 						</div>
 					</div>
@@ -150,7 +150,7 @@
 						<div class="col-md-12">
 							<div class="form-group">
                                 <label class="form-control-label" for="">E-mail</label>
-                                <input type="email" class="form-control" name="email" id="email">
+                                <input type="email" class="form-control" name="email" id="editEmail">
 							</div>
 						</div>
 					</div>
@@ -274,9 +274,9 @@
             success: function (data) {
                 console.log(data);
                 $('#editUserModal').modal('show');
-                $("#id").val(data.id);
-                $("#name").val(data.name);
-                $("#email").val(data.email);
+                $("#editID").val(data.id);
+                $("#editName").val(data.name);
+                $("#editEmail").val(data.email);
             },
             error: function () {
                 alert("Can not show the data!");
@@ -285,7 +285,7 @@
     }
     $('#updateUser').on('submit', function (e) {
         if (!e.isDefaultPrevented()) {
-            var id = $('#id').val()
+            var id = $('#editID').val()
             $.ajax({
                 url: "user/" + id,
                 type: "PUT",
